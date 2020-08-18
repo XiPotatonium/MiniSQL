@@ -1,9 +1,9 @@
 #pragma once
 
-#include "query_lexer.h"
-#include "expression.h"
-#include "common.h"
-#include "nullable.h"
+#include "query_lexer.hpp"
+#include "expression.hpp"
+#include "common.hpp"
+#include "nullable.hpp"
 
 struct Statement {
 private:

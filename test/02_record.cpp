@@ -1,6 +1,6 @@
 #include "test.h"
-#include "../catalog_manager.h"
-#include "../record_manager.h"
+#include "../inc/catalog_mgr.hpp"
+#include "../inc/record_mgr.hpp"
 
 static int count(const unique_ptr<Scanner>& sc) {
     int count = 0;

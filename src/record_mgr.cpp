@@ -1,4 +1,4 @@
-#include "record_manager.h"
+#include "../inc/record_mgr.hpp"
 
 RecordManager::RecordManager(BlockManager* block_mgr) : block_mgr(block_mgr) {
 
@@ -61,7 +61,7 @@ RecordPosition RecordManager::insert_record(const Relation& rel, const Record& r
     }
     rec_entry->use = true;
 
-    // 2. 找到插入位置，设置use，如果用了free，那么指定新的free_head
+    // 2. 锟揭碉拷锟斤拷锟斤拷位锟矫ｏ拷锟斤拷锟斤拷use锟斤拷锟斤拷锟斤拷锟斤拷锟絝ree锟斤拷锟斤拷么指锟斤拷锟铰碉拷free_head
     update_record(rel, insert_pos, record);
 
     bg.set_modified();
@@ -99,7 +99,7 @@ void RecordManager::update_record(const Relation& rel, RecordPosition pos, const
     BlockGuard bg_record(block_mgr, rel_file, pos.block_index);
     auto* rec_entry = bg_record.addr<RecordEntryData>(pos.pos);
 
-    // 3. 填入值
+    // 3. 锟斤拷锟斤拷值
     uint8_t* values_addr = rec_entry->values;
     int i_field = 0;
     for (auto& field : rel.fields) {

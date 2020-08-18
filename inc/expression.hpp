@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "common.hpp"
 #include <memory>
 
 class Expression {
@@ -57,8 +57,8 @@ public:
 
 class BinaryExpression : public Expression {
 public:
-    // *²»ÒªËæ±ã¸Ä±äÔËËã·ûµÄË³Ğò*
-    // ÔÚºóÃæÅĞ¶ÏÔËËã·ûÀàĞÍÊ±ÒªÓÃµ½
+    // *ï¿½ï¿½Òªï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½*
+    // ï¿½Úºï¿½ï¿½ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Òªï¿½Ãµï¿½
     enum class Operator {
         EQ,
         NE,

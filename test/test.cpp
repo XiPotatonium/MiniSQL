@@ -1,8 +1,8 @@
 #include "test.h"
-#include"../index_manager.h"
-#include"../record_manager.h"
-#include"../index.h"
-#include"../files.h"
+#include"../inc/index_mgr.hpp"
+#include"../inc/record_mgr.hpp"
+#include"../inc/index.hpp"
+#include"../inc/files.hpp"
 vector<pair<string, void(*)()>> test_cases;
 
 using namespace std;

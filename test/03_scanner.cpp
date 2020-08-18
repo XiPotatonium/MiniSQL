@@ -1,6 +1,6 @@
 #include "test.h"
-#include "../scanner.h"
-#include "../record_manager.h"
+#include "../inc/scanner.hpp"
+#include "../inc/record_mgr.hpp"
 
 TEST_CASE(scanner_disk_filter) {
     BlockManager bm;

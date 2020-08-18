@@ -1,9 +1,9 @@
 #pragma once
 
-#include "common.h"
-#include "nullable.h"
-#include "index.h"
-#include "scanner.h"
+#include "common.hpp"
+#include "nullable.hpp"
+#include "index.hpp"
+#include "scanner.hpp"
 #include <vector>
 #include <algorithm>
 
@@ -24,9 +24,9 @@ class IndexManager {
 
 public:
 	IndexManager(BlockManager* block_mgr);
-    // TODO: ╤тр╩аплМ╪скВрЩ║ёсисз╢ФтзожспйЩ╬щё╛рР╢к╢╚хКр╩╦Жscannerю╢╤ах║ожспйЩ╬щ║ё
+    // TODO: О©╫О©╫р╩О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫з╢О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫щёО©╫О©╫О©╫к╢О©╫О©╫О©╫р╩О©╫О©╫scannerО©╫О©╫О©╫О©╫х║О©╫О©╫О©╫О©╫О©╫О©╫О©╫щ║О©╫
 	void add_index(const Relation& rel, int field_index, unique_ptr<Scanner> scanner);
-	// TODO: ╩Ях║р╩апио╣дкВрЩё╗╣Э╢ЗфВё╘ё╛╣Э╢ЗфВ╩А╦ФкъдЦобр╩пп╣д╢еелн╩жц
+	// TODO: О©╫О©╫х║р╩О©╫О©╫О©╫о╣О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫р╩О©╫п╣д╢О©╫О©╫О©╫н╩О©╫О©╫
 	IndexIterator get_index(const Relation& rel, IndexUsage index_usage) 
 	{ 
 		vector<RecordPosition> vr;
@@ -106,9 +106,9 @@ public:
         sort(vr.begin(), vr.end());
 		return IndexIterator(vr); 
 	};
-	// TODO: ╤тр╩апи╬ЁЩр╩╦Жж╣
+	// TODO: О©╫О©╫р╩О©╫О©╫и╬О©╫О©╫р╩О©╫О©╫ж╣
 	void remove_item(const Relation& rel, int field_index, const Value& value);
-	// TODO: ╤тр╩аплМ╪ср╩╦Жж╣
+	// TODO: О©╫О©╫р╩О©╫О©╫О©╫О©╫О©╫О©╫р╩О©╫О©╫ж╣
 	void add_item(const Relation& rel, int field_index, const Value& value, RecordPosition record_pos);
 	void remove_index(const Relation& rel, int field_index)
 	{

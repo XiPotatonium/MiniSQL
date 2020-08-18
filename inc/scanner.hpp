@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
-#include "common.h"
-#include "nullable.h"
-#include "expression.h"
-#include "index.h"
+#include "common.hpp"
+#include "nullable.hpp"
+#include "expression.hpp"
+#include "index.hpp"
 
 class Scanner {
 public:

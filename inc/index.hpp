@@ -1,7 +1,7 @@
 #pragma once
-#include "common.h"
-#include "nullable.h"
-#include "block_manager.h"
+#include "common.hpp"
+#include "nullable.hpp"
+#include "block_mgr.hpp"
 // TODO: B-Tree���
 class IndexIterator {
 public:

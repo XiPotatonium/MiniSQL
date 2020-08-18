@@ -3,45 +3,30 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-set(CMAKE_CXX_STANDARD 11)
+project("MiniSQL")
+
+set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
 	add_compile_options(/GR)
 endif()
 
-set(project_headers
-	"block_manager.h"
-	"catalog_manager.h"
-	"common.h"
-	"console_util.h"
-	"expression.h"
-	"files.h"
-	"index.h"
-	"index_manager.h"
-	"lru.h"
-	"nullable.h"
-	"query_executor.h"
-	"query_lexer.h"
-	"query_parser.h"
-	"record_manager.h"
-	"scanner.h"
-	"storage_engine.h"
-)
+include_directories(inc)
 
 set(project_sources 
-    "block_manager.cpp"
-	"catalog_manager.cpp"
-	"common.cpp"
-	"console_util.cpp"
-	"expression.cpp"
-	"index.cpp"
-	"index_manager.cpp"
-	"query_executor.cpp"
-	"query_lexer.cpp"
-	"query_parser.cpp"
-	"record_manager.cpp"
-	"scanner.cpp"
-	"storage_engine.cpp"
+    "src/block_mgr.cpp"
+	"src/catalog_mgr.cpp"
+	"src/common.cpp"
+	"src/console_util.cpp"
+	"src/expression.cpp"
+	"src/index.cpp"
+	"src/index_mgr.cpp"
+	"src/query_executor.cpp"
+	"src/query_lexer.cpp"
+	"src/query_parser.cpp"
+	"src/record_mgr.cpp"
+	"src/scanner.cpp"
+	"src/storage_engine.cpp"
 )
 
 set(tests
@@ -53,10 +38,10 @@ set(tests
 	"test/06_sqltest.cpp"
 )
 
-add_executable (MiniSQL "main.cpp" ${project_headers} ${project_sources})
+add_executable (MiniSQL "src/main.cpp" ${project_sources})
 
 # Tests
-add_executable (TestEntry 	"test/test.h" "test/test.cpp" ${project_headers} ${project_sources} ${tests})
+add_executable (TestEntry "test/test.h" "test/test.cpp" ${project_sources} ${tests})
 
 add_custom_command(
 		TARGET TestEntry POST_BUILD

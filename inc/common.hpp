@@ -5,19 +5,19 @@
 #include <sstream>
 #include <vector>
 #include <stdarg.h>
-#include "files.h"
-#include "block_manager.h"
+#include "files.hpp"
+#include "block_mgr.hpp"
 
 using namespace std;
 
-const int NAME_LENGTH = 32; // Ãû³Æ×î¶à¶à³¤
-const int MAX_FIELDS = 32; // Ò»¸ö±í×î¶àÓÐ¼¸¸ö×Ö¶Î
-const int MAX_RELATIONS = 32; // ×î¶àÓÐ¼¸¸ö±í
-const int MAX_INDEXES = 16; // ×î¶àÓÐ¼¸¸öË÷Òý
-const int MAX_RECORD_LENGTH = 1024; // Ò»Ìõ¼ÇÂ¼×î¶à¶à³¤
+const int NAME_LENGTH = 32; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à³¤
+const int MAX_FIELDS = 32; // Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+const int MAX_RELATIONS = 32; // ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½
+const int MAX_INDEXES = 16; // ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+const int MAX_RECORD_LENGTH = 1024; // Ò»ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½à³¤
 
 
-// ´ú±íÊý¾Ý¿âÖÐµÄÒ»¸öÀàÐÍ£¬¿ÉÒÔÊÇINT¡¢FLOAT¡¢»òÊÇCHAR(n)
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½INTï¿½ï¿½FLOATï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CHAR(n)
 struct Type {
     // tagged union
     enum class Tag {
@@ -37,7 +37,7 @@ struct Type {
 };
 
 struct FieldData {
-    char name[NAME_LENGTH] = { 0 }; // Ãû×Ö
+    char name[NAME_LENGTH] = { 0 }; // ï¿½ï¿½ï¿½ï¿½
     bool unique;
     bool has_index;
     char index_name[NAME_LENGTH] = { 0 };
@@ -61,7 +61,7 @@ struct Field {
 struct RelationData {
     int field_count;
     FieldData fields[MAX_FIELDS];
-    // TODO: Ë÷ÒýÐÅÏ¢
+    // TODO: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 };
 static_assert(sizeof(RelationData) <= BLOCK_SIZE, "RelationData cannot be contained by a single block. Consider reorganize data.");
 
@@ -90,9 +90,9 @@ struct IndexLocation {
     void from_file(const IndexNameLocationData& f);
 };
 
-// Êý¾Ý¿âÔÚÎÄ¼þÖÐµÄ±íÊ¾¡£±ØÐë·ÅÔÚ¶ÀÁ¢µÄÎÄ¼þÖÐ¡£
+// ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ÐµÄ±ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð¡ï¿½
 struct DatabaseData {
-    char rel_names[MAX_RELATIONS][NAME_LENGTH] = { 0 }; // ´æ´¢relationÃû¡£rel_names[i]µÄrelation£¬½«´¦ÓÚ±¾ÎÄ¼þµÚi+1¸ö¿éÖÐ¡£
+    char rel_names[MAX_RELATIONS][NAME_LENGTH] = { 0 }; // ï¿½æ´¢relationï¿½ï¿½ï¿½ï¿½rel_names[i]ï¿½ï¿½relationï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½i+1ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½
     IndexNameLocationData indexes[MAX_INDEXES] = { 0 };
     int get_block(const char* relation_name) const;
     int get_free_block() const;
@@ -103,7 +103,7 @@ struct DatabaseData {
 };
 static_assert(sizeof(DatabaseData) <= BLOCK_SIZE, "DatabaseData cannot be contained by a single block. Consider reorganize data.");
 
-// ´ú±íÒ»¸ö¼ÇÂ¼Î»ÖÃ
+// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Â¼Î»ï¿½ï¿½
 struct RecordPosition {
     int block_index = -1;
     int pos = -1;
@@ -127,7 +127,7 @@ struct RecordPosition {
         return n;
     }
 };
-const RecordPosition RECORD_START = RecordPosition(0, 2048); // ¼ÇÂ¼ÎÄ¼þÖÐ£¬µÚÒ»Ìõ¼ÇÂ¼µÄÆðÊ¼Î»ÖÃ
+const RecordPosition RECORD_START = RecordPosition(0, 2048); // ï¿½ï¿½Â¼ï¿½Ä¼ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½
 
 inline bool operator<(RecordPosition rp1, RecordPosition rp2) {
     return RecordPosition::cmp(rp1, rp2) < 0;
@@ -139,14 +139,14 @@ struct RelationEntryData {
     RecordPosition empty;
 };
 
-// Á½¸öÁ´±í£¬Ò»¸öÊÇÊ¹ÓÃÖÐ£¬Ò»¸öÊÇ¿ÕÏÐ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Ð£ï¿½Ò»ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½
 struct RecordEntryData {
     bool use;
     RecordPosition free_next;
     uint8_t values[0];
 };
 
-// ´ú±íÊý¾Ý¿âÖÐµÄÒ»¸öÖµ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½Öµ
 struct Value {
 private:
 	template<typename T>

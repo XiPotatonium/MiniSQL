@@ -4,11 +4,11 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
-#include "nullable.h"
-#include "common.h"
-#include "block_manager.h"
-#include "scanner.h"
-#include "expression.h"
+#include "nullable.hpp"
+#include "common.hpp"
+#include "block_mgr.hpp"
+#include "scanner.hpp"
+#include "expression.hpp"
 
 using namespace std;
 

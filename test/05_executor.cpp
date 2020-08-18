@@ -1,7 +1,7 @@
 #include "test.h"
-#include "../record_manager.h"
-#include "../catalog_manager.h"
-#include "../query_executor.h"
+#include "../inc/record_mgr.hpp"
+#include "../inc/catalog_mgr.hpp"
+#include "../inc/query_executor.hpp"
 
 TEST_CASE(executor_direct) {
     StorageEngine eng;

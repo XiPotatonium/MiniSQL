@@ -2,10 +2,10 @@
 
 #include <string>
 #include <unordered_map>
-#include "common.h"
-#include "block_manager.h"
-#include "files.h"
-#include "nullable.h"
+#include "common.hpp"
+#include "block_mgr.hpp"
+#include "files.hpp"
+#include "nullable.hpp"
 
 using namespace std;
 

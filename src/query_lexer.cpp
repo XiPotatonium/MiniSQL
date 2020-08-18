@@ -1,4 +1,4 @@
-#include "query_lexer.h"
+#include "../inc/query_lexer.hpp"
 
 using namespace std::regex_constants;
 

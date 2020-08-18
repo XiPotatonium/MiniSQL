@@ -1,5 +1,5 @@
 #pragma once
-#include "query_executor.h"
+#include "query_executor.hpp"
 
 bool execute_safe_print(QueryExecutor& executor, const string& expr);
 // void disp_records(QueryResult& result);

@@ -1,4 +1,4 @@
-#include "query_parser.h"
+#include "../inc/query_parser.hpp"
 
 void QueryParser::assert(bool p) {
     if (!p) {

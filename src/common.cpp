@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../inc/common.hpp"
 
 int Type::length() const {
     switch (tag)

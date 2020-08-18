@@ -1,5 +1,5 @@
 #include "test.h"
-#include "../catalog_manager.h"
+#include "../inc/catalog_mgr.hpp"
 
 TEST_CASE(catalog_relation) {
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "common.h"
-#include "block_manager.h"
-#include "catalog_manager.h"
-#include "record_manager.h"
-#include "index_manager.h"
+#include "common.hpp"
+#include "block_mgr.hpp"
+#include "catalog_mgr.hpp"
+#include "record_mgr.hpp"
+#include "index_mgr.hpp"
 #include "functional"
 
 class StorageEngine {

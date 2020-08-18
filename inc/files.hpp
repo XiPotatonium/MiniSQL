@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "common.h"
+#include "common.hpp"
 using namespace std;
 
 class Files {

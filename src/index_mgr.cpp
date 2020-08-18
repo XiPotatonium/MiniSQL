@@ -1,5 +1,5 @@
-#include "index_manager.h"
-#include"common.h"
+#include "../inc/index_mgr.hpp"
+#include"../inc/common.hpp"
 #include<iostream>
 IndexManager::IndexManager(BlockManager* block_mgr) :block_mgr(block_mgr){}
 void IndexManager::add_index(const Relation& rel, int field_index, unique_ptr<Scanner> scanner)
@@ -241,7 +241,7 @@ void IndexManager::work(string& scheme, const Relation& rel, int field_index, co
 	Type type = rel.fields[field_index].type;
 	BlockGuard bg(block_mgr, scheme, num);
 	treenode* tree_info = bg.addr<treenode>();
-	// Èç¹û²»ÊÇÒ¶×Ó½Úµã
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½Ó½Úµï¿½
 	if (!tree_info->Is_leaf)
 	{
 		int size = tree_info->size;
@@ -333,7 +333,7 @@ void IndexManager::work(string& scheme, const Relation& rel, int field_index, co
 			bg.set_modified();
 		return;
 	}
-	// Èç¹ûÊÇÒ¶×Ó½Úµã
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½Ó½Úµï¿½
 	else
 	{
 		int size = tree_info->size;
@@ -357,7 +357,7 @@ void IndexManager::work(string& scheme, const Relation& rel, int field_index, co
 		bg.set_modified();
 		size++;
 		tree_info->size++;
-		// Ò¶×Ó½ÚµãÒÑÂú
+		// Ò¶ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½ï¿½
 		if (tree_info->size == degree)
 		{
 			//std::cout << 1;
@@ -386,7 +386,7 @@ void IndexManager::work(string& scheme, const Relation& rel, int field_index, co
 			//cout << "1";
 			tree_info->size = degree / 2;
 			new_bg.set_modified();
-			// ¸ÃÒ¶×Ó½Úµã²»ÊÇ¸ù½Úµã
+			// ï¿½ï¿½Ò¶ï¿½Ó½Úµã²»ï¿½Ç¸ï¿½ï¿½Úµï¿½
 			if (tree_info->Is_root == false) 
 			{
 				BlockGuard fa_bg(block_mgr, scheme, tree_info->fa);
@@ -405,7 +405,7 @@ void IndexManager::work(string& scheme, const Relation& rel, int field_index, co
 				insert_block(scheme, type, new_num,degree,tree_info->fa,i+1);
 				fa_head->size++;
 			}
-			// Ò¶×Ó½ÚµãÍ¬Ê±ÊÇ¸ù½Úµã
+			// Ò¶ï¿½Ó½Úµï¿½Í¬Ê±ï¿½Ç¸ï¿½ï¿½Úµï¿½
 			else
 			{
 				int new_root = get_new_block(scheme);
@@ -593,7 +593,7 @@ void IndexManager::remove_single_item(string& scheme, Type type, int degree, Val
 			}
 			return;
 	}
-	// ²éÑ¯µ½Ò¶½Úµã
+	// ï¿½ï¿½Ñ¯ï¿½ï¿½Ò¶ï¿½Úµï¿½
 	else 
 	{
 		for (i = 0; i < tree_info->size; i++)
@@ -611,13 +611,13 @@ void IndexManager::remove_single_item(string& scheme, Type type, int degree, Val
 			tree_info->size--;
 			if (tree_info->size >= degree / 2)
 				return;
-			// Èç¹ûÊÇ¸ù½Úµã
+			// ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½Úµï¿½
 			if (tree_info->Is_root == true) 
 			{
 				if (tree_info->size == 0)
 				return;
 			}
-			// Èç¹ûÒ¶½Úµã²»ÊÇ¸ù½Úµã ÇÒÓÐÓÒÐÖµÜ
+			// ï¿½ï¿½ï¿½Ò¶ï¿½Úµã²»ï¿½Ç¸ï¿½ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½
 			if (tree_info->next != 0)
 			{
 				int neighbor_num = tree_info->next;

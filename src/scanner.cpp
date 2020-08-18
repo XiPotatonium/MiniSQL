@@ -1,4 +1,4 @@
-#include "scanner.h"
+#include "../inc/scanner.hpp"
 
 DiskScanner::DiskScanner(BlockManager* block_mgr, Relation _rel, unique_ptr<IndexIterator> index_it) :
     rel(move(_rel)), index_it(move(index_it)), block_mgr(block_mgr),
@@ -33,11 +33,11 @@ bool DiskScanner::next() {
         while (1) {
             cur_pos = cur_pos.nil() ? RECORD_START : cur_pos.next(record_length);
             auto rel_entry = bg_rel.addr<RelationEntryData>();
-            // Èç¹ûÉÐÎ´µ½´ïËùÓÐ¼ÇÂ¼Î²²¿
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½Â¼Î²ï¿½ï¿½
             if (RecordPosition::cmp(cur_pos, rel_entry->empty) < 0) {
                 BlockGuard bg_rec(block_mgr, Files::relation(rel.name), cur_pos.block_index);
                 auto rec_entry = bg_rec.addr<RecordEntryData>(cur_pos.pos);
-                // Èç¹ûµ±Ç°ÌõÓÐÐ§£¬ÄÇÃ´ÕÒµ½ÁË
+                // ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Ã´ï¿½Òµï¿½ï¿½ï¿½
                 if (rec_entry->use) {
                     parse_cur_record(rec_entry, cur_pos);
                     return true;

@@ -3,10 +3,11 @@
 #include <fstream>
 #include <regex>
 #include <typeinfo>
-#include "query_lexer.h"
-#include "query_parser.h"
-#include "query_executor.h"
-#include "console_util.h"
+
+#include "../inc/query_lexer.hpp"
+#include "../inc/query_parser.hpp"
+#include "../inc/query_executor.hpp"
+#include "../inc/console_util.hpp"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <typeinfo>
-#include "query_parser.h"
-#include "storage_engine.h"
+#include "query_parser.hpp"
+#include "storage_engine.hpp"
 #include <unordered_map>
 
 struct QueryResult {

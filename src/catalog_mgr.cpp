@@ -1,4 +1,4 @@
-#include "catalog_manager.h"
+#include "../inc/catalog_mgr.hpp"
 
 static void check_name(const string& name) {
     if (name == "") throw logic_error("Empty name.");
@@ -71,7 +71,7 @@ void CatalogManager::add_relation(const Relation & relation)
     int free_block = file_db->get_free_block();
     if (free_block < 0) throw logic_error("Exceeded maximum relations.");
 
-    // À©³äÎÄ¼þ´óÐ¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡
     int block_count = block_mgr->file_blocks(Files::catalog());
     if (free_block >= block_count) {
         block_mgr->file_append_block(Files::catalog());
@@ -98,7 +98,7 @@ void CatalogManager::remove_relation(const string & name)
     if (block < 0) throw logic_error("Relation not found.");
 
     char* dest = file_db->rel_names[file_db->block_to_rel(block)];
-    dest[0] = 0; // Çå³ýÃû×Ö×Ö·û´®
+    dest[0] = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 
     bg.set_modified();
 }

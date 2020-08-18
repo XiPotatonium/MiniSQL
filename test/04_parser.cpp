@@ -1,5 +1,5 @@
 #include "test.h"
-#include "../query_parser.h"
+#include "../inc/query_parser.hpp"
 
 
 TEST_CASE(parser_select_simple) {
