@@ -1,4 +1,4 @@
-#include "test.h"
+#include "test.hpp"
 #include "../inc/catalog_mgr.hpp"
 #include "../inc/record_mgr.hpp"
 

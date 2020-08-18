@@ -1,9 +1,11 @@
-#include "test.h"
+#include "test.hpp"
 #include "../inc/record_mgr.hpp"
 #include "../inc/catalog_mgr.hpp"
 #include "../inc/query_executor.hpp"
 #include "../inc/console_util.hpp"
-#include <windows.h>
+
+#include <direct.h>
+#include <iostream>
 
 TEST_CASE(sql0) {
 	remove("data/catalog.dat");

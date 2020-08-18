@@ -41,7 +41,7 @@ set(tests
 add_executable (MiniSQL "src/main.cpp" ${project_sources})
 
 # Tests
-add_executable (TestEntry "test/test.h" "test/test.cpp" ${project_sources} ${tests})
+add_executable (TestEntry "test/test.cpp" ${project_sources} ${tests})
 
 add_custom_command(
 		TARGET TestEntry POST_BUILD

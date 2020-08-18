@@ -1,4 +1,4 @@
-#include "test.h"
+#include "test.hpp"
 #include"../inc/index_mgr.hpp"
 #include"../inc/record_mgr.hpp"
 #include"../inc/index.hpp"
@@ -26,7 +26,6 @@ int main() {
 		}
 		cur++;
 	}
-	system("pause");
 	return 0;
 
 }
