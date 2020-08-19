@@ -25,6 +25,10 @@ struct TokenRegex {
     regex regex;
 };
 
+/// <summary>
+/// TODO 感觉没必要单独搞一个class
+/// 或者说Lexer Parser全局使用，只构造一次
+/// </summary>
 class QueryLexer {
 public:
     vector<Token> tokenize(const string& str);

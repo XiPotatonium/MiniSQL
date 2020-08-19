@@ -24,9 +24,15 @@ class StorageEngine {
 public:
     StorageEngine(int max_blocks = 1024) : bm(max_blocks), cm(&bm), rm(&bm), im(&bm) {}
 
-    /// QUESTION 它在Flush甚么？
+    /// <summary>
+    /// 将dirty的block写回硬盘
+    /// </summary>
     void flush() { bm.flush(); }
 
+    /// <summary>
+    /// 将一个新relation写到硬盘上
+    /// </summary>
+    /// <param name="relation"></param>
     void add_relation(const Relation &relation) {
         cm.add_relation(relation);
         rm.add_relation(relation);

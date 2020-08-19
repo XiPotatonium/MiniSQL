@@ -54,12 +54,22 @@ struct DeleteStatement : public Statement {
 	unique_ptr<Expression> where;
 };
 
+/// <summary>
+/// identity char(128) unique
+/// @name @type @limit
+/// </summary>
 struct CreateTableField {
 	string name;
 	Type type;
 	Nullable<string> limit;
 };
 
+/// <summary>
+/// create table @table {
+///     @fields
+///     primary key(@key)  
+/// };
+/// </summary>
 struct CreateTableStatement : public Statement {
 	string table;
 	vector<CreateTableField> fields;
@@ -92,7 +102,10 @@ private:
     bool consume(Token& match, initializer_list<const char*> contents);
     bool consume(Token& match, initializer_list<TokenType> types);
     bool consume(Token& match, const char* content) { return consume(match, { content }); }
-    bool consume(const char* content) { return consume(Token(), content); }
+    bool consume(const char* content) { 
+        Token t = Token();
+        return consume(t, content); 
+    }
     bool consume(Token& match, TokenType type) { return consume(match, { type }); }
 
     BinaryExpression::Operator binary_op(const string& op);

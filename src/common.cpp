@@ -32,6 +32,9 @@ void Field::from_file(const FieldData & f) {
     index_name = f.index_name;
 }
 
+/// <summary>
+/// 更新表的prototype，主要是更新field的offset和单值索引的索引位置
+/// </summary>
 void Relation::update() {
     int len = 0;
     indexes.clear();

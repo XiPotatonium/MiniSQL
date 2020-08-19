@@ -53,7 +53,7 @@ int main(void) {
             execute_safe_print(executor, str);
         }
 
-		// WARNING 清除缓冲区中多余的内容，有没有更优雅的方法？
+		// TODO 清除缓冲区中多余的内容，有没有更优雅的方法？
         while (getchar() != '\n')
             ;
     }
