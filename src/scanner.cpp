@@ -33,11 +33,11 @@ bool DiskScanner::next() {
         while (1) {
             cur_pos = cur_pos.nil() ? RECORD_START : cur_pos.next(record_length);
             auto rel_entry = bg_rel.addr<RelationEntryData>();
-            // �����δ�������м�¼β��
+            // 如果尚未到达所有记录尾部
             if (RecordPosition::cmp(cur_pos, rel_entry->empty) < 0) {
                 BlockGuard bg_rec(block_mgr, Files::relation(rel.name), cur_pos.block_index);
                 auto rec_entry = bg_rec.addr<RecordEntryData>(cur_pos.pos);
-                // �����ǰ����Ч����ô�ҵ���
+                // 如果当前条有效，那么找到了
                 if (rec_entry->use) {
                     parse_cur_record(rec_entry, cur_pos);
                     return true;
