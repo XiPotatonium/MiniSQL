@@ -13,7 +13,7 @@ class StorageEngine {
     RecordManager rm;
     IndexManager im;
 
-    unique_ptr<IndexIterator> get_index_iterator(const Relation &rel, Nullable<IndexUsage> index_usage) {
+    unique_ptr<IndexIterator> get_index_iterator(const Relation &rel, optional<IndexUsage> index_usage) {
         if (index_usage) {
             return unique_ptr<IndexIterator>(new IndexIterator(im.get_index(rel, index_usage.value())));
         } else {
@@ -54,11 +54,11 @@ public:
         rm.remove_relation(name);
     }
 
-    Nullable<Relation> get_relation(const string &name) { return cm.get_relation(name); }
+    optional<Relation> get_relation(const string &name) { return cm.get_relation(name); }
 
     Relation get_relation_exist(const string &name) {
-        Nullable<Relation> nrel = get_relation(name);
-        if (nrel.null())
+        optional<Relation> nrel = get_relation(name);
+        if (!nrel)
             throw logic_error("Relation not found");
         return nrel.value();
     }
@@ -71,8 +71,8 @@ public:
     }
 
     void remove_index(const string &index_name) {
-        Nullable<IndexLocation> il = cm.get_index_location(index_name);
-        if (il.null())
+        optional<IndexLocation> il = cm.get_index_location(index_name);
+        if (!il)
             throw logic_error("Index not found");
 
         Relation rel = get_relation_exist(il->relation_name);
@@ -91,14 +91,14 @@ public:
     }
 
     void update_record(const string &rel_name, Record &&record,
-                       function<Nullable<Value>(const Record &record, int field_index)> new_value) {
+                       function<optional<Value>(const Record &record, int field_index)> new_value) {
         if (record.physical_position.nil())
             throw logic_error("Unexpected error. This record does not has a physical position.");
         Relation rel = get_relation_exist(rel_name);
 
         Record record_origin = record;
         for (int i = 0; i < rel.fields.size(); ++i) {
-            Nullable<Value> new_v = new_value(record_origin, i);
+            optional<Value> new_v = new_value(record_origin, i);
             if (new_v) {
                 record.values[i] = new_v.value();
                 if (rel.fields[i].has_index) {
@@ -121,7 +121,7 @@ public:
         }
     }
 
-    unique_ptr<Scanner> select_record(const string &rel_name, Nullable<IndexUsage> index_usage) {
+    unique_ptr<Scanner> select_record(const string &rel_name, optional<IndexUsage> index_usage) {
         Relation rel = get_relation_exist(rel_name);
         return rm.select_record(rel, get_index_iterator(rel, index_usage));
     }

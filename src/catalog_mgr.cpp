@@ -115,7 +115,7 @@ void CatalogManager::remove_relation(const string &name) {
     bg.set_modified();
 }
 
-Nullable<Relation> CatalogManager::get_relation(const string &name) {
+optional<Relation> CatalogManager::get_relation(const string &name) {
     check_name(name);
 
     BlockGuard bg(block_mgr, Files::catalog(), 0);
@@ -123,7 +123,7 @@ Nullable<Relation> CatalogManager::get_relation(const string &name) {
 
     int block = file_db->get_block(name.c_str());
     if (block < 0)
-        return Null();
+        return nullopt;
 
     BlockGuard bg_rel(block_mgr, Files::catalog(), block);
     auto *file_rel = bg_rel.addr<RelationData>();
@@ -131,13 +131,13 @@ Nullable<Relation> CatalogManager::get_relation(const string &name) {
     Relation rel;
     rel.from_file(*file_rel);
     rel.name = name;
-    return rel;
+    return { rel };
 }
 
 void CatalogManager::add_index(const string &rel_name, const string &field_name, const string &index_name) {
     check_name(rel_name);
     check_name(index_name);
-    Nullable<Relation> rel = get_relation(rel_name);
+    optional<Relation> rel = get_relation(rel_name);
     if (!rel)
         throw logic_error("This relation does not exist");
 
@@ -185,13 +185,13 @@ void CatalogManager::remove_index(const string &index_name) {
     bg.set_modified();
 }
 
-Nullable<IndexLocation> CatalogManager::get_index_location(const string &index_name) {
+optional<IndexLocation> CatalogManager::get_index_location(const string &index_name) {
     BlockGuard bg(block_mgr, Files::catalog(), 0);
     auto *file_db = bg.addr<DatabaseData>();
 
     int index = file_db->get_index(index_name.c_str());
     if (index < 0)
-        return Null();
+        return nullopt;
 
     IndexLocation il;
     il.from_file(file_db->indexes[index]);

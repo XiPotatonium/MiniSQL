@@ -1,5 +1,7 @@
 #include "../inc/query_lexer.hpp"
 
+#include <optional>
+
 using namespace std::regex_constants;
 
 static TokenRegex regexes[] = {
@@ -17,7 +19,7 @@ vector<Token> QueryLexer::tokenize(const string& str) {
     int cursor = 0;
     const char* cur_str = str.c_str();
     while (cursor < str.length()) {
-        Nullable<TokenType> cur_type;
+        optional<TokenType> cur_type;
         match_results<const char*> cur_match;
 
         // discard spaces

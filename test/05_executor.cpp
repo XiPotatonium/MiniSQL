@@ -15,7 +15,7 @@ TEST_CASE(executor_direct) {
     {
         auto& rec = table.records[0];
         assert(rec.values.size() == 3, "value count");
-        assert(rec.values[0].INT == 1, "value");
+        assert(get<int>(rec.values[0].basic_v) == 1, "value");
         assert(rec.values[1].CHAR == "Zhang San", "value");
         assert(rec.values[2].CHAR == "z3@example.com", "value");
     }
@@ -23,7 +23,7 @@ TEST_CASE(executor_direct) {
     {
         auto& rec = table.records[1];
         assert(rec.values.size() == 3, "value count");
-        assert(rec.values[0].INT == 2, "value");
+        assert(get<int>(rec.values[0].basic_v) == 2, "value");
         assert(rec.values[1].CHAR == "Li Si", "value");
         assert(rec.values[2].CHAR == "l4@example.com", "value"); 
     }
@@ -41,7 +41,7 @@ TEST_CASE(executor_expr_where) {
     {
         auto& rec = table.records[0];
         assert(rec.values.size() == 1, "value count");
-        assert(rec.values[0].INT == -6, "value");
+        assert(get<int>(rec.values[0].basic_v) == -6, "value");
     }
 }
 

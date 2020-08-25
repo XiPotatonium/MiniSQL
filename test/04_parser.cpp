@@ -32,7 +32,7 @@ TEST_CASE(parser_select_expr) {
     auto ss = static_cast<SelectStatement*>(stmt.release());
     auto expr = ss->select.value()[0].expr.get();
     expr->resolve(rel);
-    assert(expr->eval(Record()).INT == 33, "result");
+    assert(get<int>(expr->eval(Record()).basic_v) == 33, "result");
 }
 
 TEST_CASE(parser_select_expr_from) {
@@ -57,7 +57,7 @@ TEST_CASE(parser_select_expr_from) {
         Record rec;
         rec.values.push_back(Value::create_CHAR("abc"));
         rec.values.push_back(Value::create_INT(3));
-        assert(expr->eval(rec).INT == 11, "case 1");
+        assert(get<int>(expr->eval(rec).basic_v) == 11, "case 1");
     }
    
     // case 2
@@ -65,7 +65,7 @@ TEST_CASE(parser_select_expr_from) {
         Record rec;
         rec.values.push_back(Value::create_CHAR("ac"));
         rec.values.push_back(Value::create_INT(9));
-        assert(expr->eval(rec).INT == 29, "case 2");
+        assert(get<int>(expr->eval(rec).basic_v) == 29, "case 2");
     }
 }
 
@@ -76,9 +76,9 @@ TEST_CASE(parser_insert) {
 	auto ss = static_cast<InsertStatement*>(stmt.release());
 	
 	assert(ss->into == "student", "into");
-	assert(ss->fields.null(), "field");
+	assert(!ss->fields, "field");
 	assert(ss->values[0].second.CHAR == "12345678", "values0");
-	assert(ss->values[1].second.INT == 22, "values1");
+	assert(get<int>(ss->values[1].second.basic_v) == 22, "values1");
 }
 
 TEST_CASE(parser_update) {
@@ -142,17 +142,17 @@ TEST_CASE(parser_create_table) {
 	assert(ss->fields[0].name == "height", "f 0 name");
 	assert(ss->fields[0].type.tag == Type::Tag::FLOAT, "f 0 type");
 	//assert(ss->fields[0].type.length() == 8, "f0 type length");
-	assert(ss->fields[0].limit.null(), "f 0 limit");
+	assert(!ss->fields[0].limit, "f 0 limit");
 
 	assert(ss->fields[1].name == "pid", "f 1 name");
 	assert(ss->fields[1].type.tag == Type::Tag::INT, "f 1 type");
 	//assert(ss->fields[1].type.length() == 32, "f 1 type length");
-	assert(ss->fields[1].limit.null(), "f 1 limit");
+	assert(!ss->fields[1].limit, "f 1 limit");
 
 	assert(ss->fields[2].name == "name", "f 2 name");
 	assert(ss->fields[2].type.tag == Type::Tag::CHAR, "f 2 type");
 	assert(ss->fields[2].type.length() == 32, "f 2 type length");
-	assert(ss->fields[2].limit.null(), "f 2 limit");
+	assert(!ss->fields[2].limit, "f 2 limit");
 
 	assert(ss->fields[3].name == "identity", "f 2 name");
 	assert(ss->fields[3].type.tag == Type::Tag::CHAR, "f 2 type");
@@ -162,7 +162,7 @@ TEST_CASE(parser_create_table) {
 	assert(ss->fields[4].name == "age", "f 4 name");
 	assert(ss->fields[4].type.tag == Type::Tag::INT, "f 4 type");
 	//assert(ss->fields[1].type.length() == 32, "f 1 type length");
-	assert(ss->fields[4].limit.null(), "f 4 limit");
+	assert(!ss->fields[4].limit, "f 4 limit");
 
 	assert(ss->key == "pid", "key");
 }

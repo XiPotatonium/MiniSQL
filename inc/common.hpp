@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <variant>
 
 using namespace std;
 
@@ -18,14 +19,8 @@ const int MAX_RECORD_LENGTH = 1024; // 一条记录最多多长
 
 // 代表数据库中的一个类型，可以是INT、FLOAT、或是CHAR(n)
 struct Type {
-    // tagged union
     enum class Tag { INT, CHAR, FLOAT } tag;
-    // TODO 删掉这个union
-    union {
-        struct {
-            int len;
-        } CHAR;
-    };
+    int char_len;
     int length() const;
     static Type create_INT() {
         Type t;
@@ -40,7 +35,7 @@ struct Type {
     static Type create_CHAR(int len) {
         Type t;
         t.tag = Tag::CHAR;
-        t.CHAR.len = len;
+        t.char_len = len;
         return t;
     }
 };
@@ -195,18 +190,15 @@ private:
     }
 
 public:
-    union {
-        int INT = 0;
-        float FLOAT;
-    };
+    variant<int, float> basic_v;
     string CHAR;
     bool greater_than(const Value &x, Type type);
     static int cmp(Type type, const Value &v1, const Value &v2) {
         switch (type.tag) {
         case Type::Tag::INT:
-            return cmp(v1.INT, v2.INT);
+            return cmp(get<int>(v1.basic_v), get<int>(v2.basic_v));
         case Type::Tag::FLOAT:
-            return cmp(v1.FLOAT, v2.FLOAT);
+            return cmp(get<float>(v1.basic_v), get<float>(v2.basic_v));
         case Type::Tag::CHAR:
             return cmp(v1.CHAR, v2.CHAR);
         default:
@@ -215,29 +207,32 @@ public:
     }
     void write(void *addr, Type type) const;
     void parse(void *addr, Type type);
+
     Value &operator=(Value &&v) noexcept {
         if (&v != this) {
-            INT = v.INT;
+            basic_v = v.basic_v;
             CHAR = move(v.CHAR);
         }
         return *this;
     }
+
     Value &operator=(const Value &v) {
-        INT = v.INT;
+        basic_v = v.basic_v;
         CHAR = v.CHAR;
         return *this;
     }
+
     Value() = default;
     Value(const Value &v) { *this = v; }
     Value(Value &&v) noexcept { *this = move(v); }
     static Value create_INT(int i) {
         Value v;
-        v.INT = i;
+        v.basic_v = i;
         return v;
     }
     static Value create_FLOAT(float f) {
         Value v;
-        v.FLOAT = f;
+        v.basic_v = f;
         return v;
     }
     static Value create_CHAR(string s) {

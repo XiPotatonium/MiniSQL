@@ -2,10 +2,10 @@
 
 #include "common.hpp"
 #include "index.hpp"
-#include "nullable.hpp"
 #include "scanner.hpp"
 #include <algorithm>
 #include <vector>
+#include <optional>
 
 struct tree_information {
     int root;
@@ -30,8 +30,8 @@ public:
         vector<RecordPosition> vr;
         const string &scheme = Files::index(rel.name, index_usage.field_index);
         Type type = rel.fields[index_usage.field_index].type;
-        Nullable<Value> bj = index_usage.from;
-        Nullable<Value> end_bj = index_usage.to;
+        optional<Value> bj = index_usage.from;
+        optional<Value> end_bj = index_usage.to;
         BlockGuard tree_bg(block_mgr, scheme, 0);
         tree_information tot_info = *tree_bg.addr<tree_information>(0);
         int num = tot_info.root;
@@ -45,7 +45,7 @@ public:
                 int flag = 0;
                 int size = tree_info->size;
                 Value temp_value;
-                if (bj.null())
+                if (!bj)
                     i = 0;
                 else
                     for (i = 0; i < size; i++) {
@@ -59,7 +59,7 @@ public:
                     while (i < value_info->size) {
                         temp_record = get_record(scheme, type, num, degree, i);
                         temp_value = get_value(value_bg, scheme, type, num, degree, i);
-                        if (end_bj.null() || Value::cmp(type, end_bj.value(), temp_value) >= 0) {
+                        if (!end_bj || Value::cmp(type, end_bj.value(), temp_value) >= 0) {
                             vr.push_back(temp_record);
                             i++;
                         } else {
@@ -81,7 +81,7 @@ public:
                 int size = tree_info->size;
                 Value temp_value;
                 BlockGuard value_bg(block_mgr, scheme, num);
-                if (bj.null())
+                if (!bj)
                     i = 0;
                 else
                     for (i = 0; i < size; i++) {
@@ -104,7 +104,7 @@ public:
         const string &scheme = Files::index(rel.name, field_index);
         remove(scheme.c_str());
     }
-    Nullable<RecordPosition> find(const Relation &rel, int field_index, Value value);
+    optional<RecordPosition> find(const Relation &rel, int field_index, Value value);
 
 private:
     BlockManager *block_mgr;
@@ -122,7 +122,7 @@ private:
     void shift_record(const string &scheme, Type type, int degree, int num, int pos, int direction);
     void merge_leaf(string &scheme, Type type, int left_leaf, int right_leaf, int degree);
     void merge_nonleaf(string &scheme, Type type, int left_nonleaf, int right_nonleaf, int degree);
-    Nullable<RecordPosition> find_record(const string &scheme, Type type, int degree, Value value, int num);
+    optional<RecordPosition> find_record(const string &scheme, Type type, int degree, Value value, int num);
     void delete_parent_information(string &scheme, Type type, int num, Value value, int degree);
     int get_new_block(const string &scheme);
 

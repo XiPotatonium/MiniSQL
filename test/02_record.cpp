@@ -29,7 +29,7 @@ TEST_CASE(record_insert) {
     {
         Record r;
 
-        v.INT = 1;
+        v.basic_v = 1;
         r.values.push_back(v);
         v.CHAR = "Zhang San";
         r.values.push_back(v);
@@ -42,7 +42,7 @@ TEST_CASE(record_insert) {
     {
         Record r;
 
-        v.INT = 2;
+        v.basic_v = 2;
         r.values.push_back(v);
         v.CHAR = "Li Si";
         r.values.push_back(v);
@@ -58,13 +58,13 @@ TEST_CASE(record_insert) {
         auto& rec = scanner->current();
         if (i == 0) {
             assert(rec.values.size() == 3, "value count");
-            assert(rec.values[0].INT == 1, "value");
+            assert(get<int>(rec.values[0].basic_v) == 1, "value");
             assert(rec.values[1].CHAR == "Zhang San", "value");
             assert(rec.values[2].CHAR == "z3@example.com", "value");
         }
         else if (i == 1) {
             assert(rec.values.size() == 3, "value count");
-            assert(rec.values[0].INT == 2, "value");
+            assert(get<int>(rec.values[0].basic_v) == 2, "value");
             assert(rec.values[1].CHAR == "Li Si", "value");
             assert(rec.values[2].CHAR == "l4@example.com", "value");
         }
@@ -84,7 +84,7 @@ TEST_CASE(record_delete) {
     Value v;
     Record r;
 
-    v.INT = 6;
+    v.basic_v = 6;
     r.values.push_back(v);
     v.CHAR = "Wang Wu";
     r.values.push_back(v);

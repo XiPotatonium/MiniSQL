@@ -42,7 +42,8 @@ void IndexManager::insert_value(const string &scheme, Type type, const Value &va
     value.write(bg.addr<void>(offset), type);
 }
 
-void IndexManager::insert_record(const string &scheme, Type type, RecordPosition record_pos, int degree, int num, int pos) {
+void IndexManager::insert_record(const string &scheme, Type type, RecordPosition record_pos, int degree, int num,
+                                 int pos) {
     int offset = sizeof(treenode) + degree * type.length() + degree * sizeof(int) + pos * sizeof(RecordPosition);
     BlockGuard bg(block_mgr, scheme, num);
     *bg.addr<RecordPosition>(offset) = record_pos;
@@ -446,7 +447,7 @@ void IndexManager::add_item(const Relation &rel, int field_index, const Value &v
         work(scheme, rel, field_index, value, record_pos, tree_info->root, degree);
 }
 
-Nullable<RecordPosition> IndexManager::find(const Relation &rel, int field_index, Value value) {
+optional<RecordPosition> IndexManager::find(const Relation &rel, int field_index, Value value) {
     const string &scheme = Files::index(rel.name, field_index);
     tree_information tree_info = get_information(rel, field_index, scheme);
     int degree = tree_info.degree;
@@ -455,7 +456,7 @@ Nullable<RecordPosition> IndexManager::find(const Relation &rel, int field_index
     return find_record(scheme, type, degree, value, root);
 }
 
-Nullable<RecordPosition> IndexManager::find_record(const string &scheme, Type type, int degree, Value value, int num) {
+optional<RecordPosition> IndexManager::find_record(const string &scheme, Type type, int degree, Value value, int num) {
     BlockGuard bg(block_mgr, scheme, num);
     treenode tree_info = *bg.addr<treenode>();
     if (tree_info.Is_leaf == true) {
@@ -469,7 +470,7 @@ Nullable<RecordPosition> IndexManager::find_record(const string &scheme, Type ty
                 break;
         }
         if (i == size)
-            return Null();
+            return nullopt;
         else
             return get_record(scheme, type, num, degree, i);
     } else {
@@ -623,12 +624,12 @@ void IndexManager::remove_single_item(string &scheme, Type type, int degree, Val
 // TODO ??
 void IndexManager::remove_item(const Relation &rel, int field_index, const Value &value) {
     return;
-    //string &scheme = Files::index(rel.name, field_index);
-    //Type type = rel.fields[field_index].type;
-    //tree_information tree_info = get_information(rel, field_index, scheme);
+    // string &scheme = Files::index(rel.name, field_index);
+    // Type type = rel.fields[field_index].type;
+    // tree_information tree_info = get_information(rel, field_index, scheme);
     //// degree = {Is_root + Is_leaf + fa + size} + data[degree] + block_pos[degree] + rec_address[degree]
-    //int degree = tree_info.degree;
-    //if (tree_info.root == -1)
+    // int degree = tree_info.degree;
+    // if (tree_info.root == -1)
     //    throw "The index is not exist";
-    //remove_single_item(scheme, type, degree, value, tree_info.root);
+    // remove_single_item(scheme, type, degree, value, tree_info.root);
 }

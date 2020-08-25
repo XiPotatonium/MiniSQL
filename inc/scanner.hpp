@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include "common.hpp"
-#include "nullable.hpp"
 #include "expression.hpp"
 #include "index.hpp"
 
@@ -13,11 +12,6 @@ public:
     virtual ~Scanner() {}
 };
 
-/// <summary>
-/// QUESTION 为什么typename It = Cont::iterator不对，显示指定他是一个类型？
-/// </summary>
-/// <typeparam name="Cont"></typeparam>
-/// <typeparam name="It"></typeparam>
 template<typename Cont, typename It = typename Cont::iterator>
 class ContainerScanner : public Scanner {
     Cont container;

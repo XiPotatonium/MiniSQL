@@ -261,9 +261,9 @@ bool QueryParser::select_source(SelectSource & source) {
 bool QueryParser::select_stmt_inner(unique_ptr<SelectStatement> & stmt) {
     int save = _pos;
     if (reset(save) && consume("select")) {
-        Nullable<vector<SelectField>> select;
+        optional<vector<SelectField>> select;
         unique_ptr<Expression> where;
-        Nullable<SelectSource> from;
+        optional<SelectSource> from;
         if (!consume("*")) {
             select = vector<SelectField>();
             select_list(select.value());
@@ -398,7 +398,7 @@ bool QueryParser::create_table_field(CreateTableField & field)
     else if (t.content == "char") {
         Token t0;
         assert(consume("(") && consume(t0, TokenType::literal) && consume(")"));
-        field.type = Type::create_CHAR(literal(t0.content).second.INT);
+        field.type = Type::create_CHAR(get<int>(literal(t0.content).second.basic_v));
     }
     else {
         assert(false);

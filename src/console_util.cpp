@@ -36,9 +36,9 @@ void disp_records(QueryResult &result) {
         for (int j = 0; j < result.relation.fields.size(); j++) {
             cout << "| " << setfill(' ') << setw(max[j]);
             if (result.relation.fields[j].type.tag == Type::Tag::INT) {
-                cout << result.records[i].values[j].INT << ' ';
+                cout << get<int>(result.records[i].values[j].basic_v) << ' ';
             } else if (result.relation.fields[j].type.tag == Type::Tag::FLOAT) {
-                cout << result.records[i].values[j].FLOAT << ' ';
+                cout << get<int>(result.records[i].values[j].basic_v) << ' ';
             } else if (result.relation.fields[j].type.tag == Type::Tag::CHAR) {
                 cout << result.records[i].values[j].CHAR << ' ';
             }

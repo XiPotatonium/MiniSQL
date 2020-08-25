@@ -62,7 +62,7 @@ FilterScanner::FilterScanner(unique_ptr<Scanner> from, unique_ptr<Expression> pr
 bool FilterScanner::next() {
     while (_from->next()) {
         cur_record = move(_from->current());
-        if (_pred->eval(cur_record).INT) {
+        if (get<int>(_pred->eval(cur_record).basic_v)) {
             return true;
         }
     }

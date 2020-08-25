@@ -2,23 +2,23 @@
 #include <stack>
 
 /// <summary>
-/// 比较
+/// ???
 /// </summary>
-/// <param name="t">v1 v2的类型</param>
+/// <param name="t">v1 v2??????</param>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
 /// <returns></returns>
-bool QueryExecutor::value_less(Nullable<Type> t, Nullable<Value> v1, Nullable<Value> v2) {
+bool QueryExecutor::value_less(optional<Type> t, optional<Value> v1, optional<Value> v2) {
     bool ret = false;
-    if (v1.null() || v2.null()) {
-        if (!v1.null() || !v2.null()) {
-            ret = true;     // xor是true
+    if (!v1 || !v2) {
+        if (v1 || v2) {
+            ret = true;     // xor??true
         }
     } else {
         if (t->tag == Type::Tag::INT) {
-            ret = v1->INT < v2->INT;
+            ret = get<int>(v1->basic_v) < get<int>(v2->basic_v);
         } else if (t->tag == Type::Tag::FLOAT) {
-            ret = v1->FLOAT < v2->FLOAT;
+            ret = get<float>(v1->basic_v) < get<float>(v2->basic_v);
         } else if (t->tag == Type::Tag::CHAR) {
             ret = v1->CHAR < v2->CHAR;
         }
@@ -26,7 +26,7 @@ bool QueryExecutor::value_less(Nullable<Type> t, Nullable<Value> v1, Nullable<Va
     return false;
 }
 
-Nullable<IndexUsage> QueryExecutor::search_index(BinaryExpression *exp, Relation &relation) {
+optional<IndexUsage> QueryExecutor::search_index(BinaryExpression *exp, Relation &relation) {
     vector<IndexUsage> candidates;
     stack<BinaryExpression *> s;
     BinaryExpression *pcur = exp;
@@ -64,7 +64,7 @@ Nullable<IndexUsage> QueryExecutor::search_index(BinaryExpression *exp, Relation
                 }
                 if (candidate_index == candidates.size()) {
                     ptr_field->resolve(relation);
-                    candidates.push_back(IndexUsage{ptr_field->get_field(), Null(), Null()});
+                    candidates.push_back(IndexUsage{ptr_field->get_field(), nullopt, nullopt});
                 }
 
                 if (ptr_field) {
@@ -137,7 +137,7 @@ Nullable<IndexUsage> QueryExecutor::search_index(BinaryExpression *exp, Relation
         }
     }
 
-    Nullable<IndexUsage> ret = Null();
+    optional<IndexUsage> ret = nullopt;
     for (int i = 0; i < candidates.size(); ++i) {
         if (relation.fields[candidates[i].field_index].has_index) {
             ret = candidates[i];
@@ -163,7 +163,7 @@ unique_ptr<Scanner> QueryExecutor::select_scanner(SelectStatement *stmt) {
                 sc = _storage_eng->select_record(
                     ph_rel->name, search_index(static_cast<BinaryExpression *>(stmt->where.get()), ph_rel.value()));
             } else {
-                sc = _storage_eng->select_record(ph_rel->name, Null());
+                sc = _storage_eng->select_record(ph_rel->name, nullopt);
             }
         } else {
             sc = select_scanner(stmt->from->subquery.get());
@@ -199,7 +199,7 @@ QueryResult QueryExecutor::select_exe(SelectStatement *stmt) {
 }
 
 QueryResult QueryExecutor::insert_exe(InsertStatement *stmt) {
-    // Nullable<Relation> relation = _storage_eng->get_relation(stmt->into);
+    // optional<Relation> relation = _storage_eng->get_relation(stmt->into);
     // if (!relation)
     //{
     //	throw logic_error("Relation not found.");
@@ -225,7 +225,7 @@ QueryResult QueryExecutor::insert_exe(InsertStatement *stmt) {
 
 QueryResult QueryExecutor::delete_exe(DeleteStatement *stmt) {
     unique_ptr<Scanner> sc;
-    Nullable<Relation> relation = _storage_eng->get_relation(stmt->relation);
+    optional<Relation> relation = _storage_eng->get_relation(stmt->relation);
     int count = 0;
     if (!relation) {
         throw logic_error("relation not found");
@@ -237,7 +237,7 @@ QueryResult QueryExecutor::delete_exe(DeleteStatement *stmt) {
             relation->name, search_index(static_cast<BinaryExpression *>(stmt->where.get()), relation.value()));
     } else {
         // don't if unary or else
-        sc = _storage_eng->select_record(relation->name, Null());
+        sc = _storage_eng->select_record(relation->name, nullopt);
     }
     if (stmt->where) {
         sc = unique_ptr<Scanner>(new FilterScanner(move(sc), move(stmt->where)));
@@ -307,7 +307,7 @@ QueryResult QueryExecutor::drop_index_exe(DropIndexStatement *stmt) {
 
 QueryResult QueryExecutor::update_exe(UpdateStatement *stmt) {
     unique_ptr<Scanner> sc;
-    Nullable<Relation> relation = _storage_eng->get_relation(stmt->table);
+    optional<Relation> relation = _storage_eng->get_relation(stmt->table);
     int count = 0;
     if (!relation) {
         throw logic_error("relation not found");
@@ -319,7 +319,7 @@ QueryResult QueryExecutor::update_exe(UpdateStatement *stmt) {
             relation->name, search_index(static_cast<BinaryExpression *>(stmt->where.get()), relation.value()));
     } else {
         // don't if unary or else
-        sc = _storage_eng->select_record(relation->name, Null());
+        sc = _storage_eng->select_record(relation->name, nullopt);
     }
     if (stmt->where) {
         sc = unique_ptr<Scanner>(new FilterScanner(move(sc), move(stmt->where)));
@@ -333,13 +333,13 @@ QueryResult QueryExecutor::update_exe(UpdateStatement *stmt) {
     }
     for (int i = 0; i < records.size(); ++i) {
         _storage_eng->update_record(relation->name, move(records[i]),
-                                    [stmt, &relation](const Record &record, int field_index) -> Nullable<Value> {
+                                    [stmt, &relation](const Record &record, int field_index) -> optional<Value> {
                                         for (int i = 0; i < stmt->set.size(); ++i) {
                                             if (stmt->set[i].item == relation.value().fields[field_index].name) {
                                                 return stmt->set[i].expr->eval(record);
                                             }
                                         }
-                                        return Null();
+                                        return nullopt;
                                     });
     }
     QueryResult t;
@@ -348,7 +348,7 @@ QueryResult QueryExecutor::update_exe(UpdateStatement *stmt) {
 }
 
 /// <summary>
-/// 依据stmt类型分配handler
+/// ????stmt???????handler
 /// </summary>
 /// <param name="stmt"></param>
 /// <returns></returns>

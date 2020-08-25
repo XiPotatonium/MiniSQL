@@ -33,10 +33,10 @@ Value UnaryExpression::eval(const Record& record) {
         case Type::Tag::CHAR:
             break;
         case Type::Tag::INT:
-            if (_op == Op1::NEG) vr.INT = -v.INT;
+            if (_op == Op1::NEG) vr.basic_v = -get<int>(v.basic_v);
             break;
         case Type::Tag::FLOAT:
-            if (_op == Op1::NEG) vr.FLOAT = -v.FLOAT;
+            if (_op == Op1::NEG) vr.basic_v = -get<float>(v.basic_v);
             break;
         default: throw logic_error("Unsupported type.");
     }
@@ -112,7 +112,7 @@ Type deduce_type(Op2 op, Type t1, Type t2) {
     }
     else if (op == Op2::ADD && t1.tag == T::CHAR && t2.tag == T::CHAR) { // string add
         t.tag = T::CHAR;
-        t.CHAR.len = t1.CHAR.len + t2.CHAR.len;
+        t.char_len = t1.char_len + t2.char_len;
     }
     else {
         deduce_failed();
@@ -165,17 +165,17 @@ Value BinaryExpression::eval(const Record & record) {
     switch (_r1->type().tag)
     {
         case Type::Tag::CHAR:
-            if (is_cmp_op(_op)) vr.INT = do_cmp_op(_op, v1.CHAR, v2.CHAR);
+            if (is_cmp_op(_op)) vr.basic_v = do_cmp_op(_op, v1.CHAR, v2.CHAR);
             else if (_op == Operator::ADD) vr.CHAR = v1.CHAR + v2.CHAR;
             break;
         case Type::Tag::INT:
-            if (is_cmp_op(_op)) vr.INT = do_cmp_op(_op, v1.INT, v2.INT);
-            else if (is_logic_op(_op)) vr.INT = do_logic_op(_op, v1.INT, v2.INT);
-            else if (is_alg_op(_op)) vr.INT = do_alg_op(_op, v1.INT, v2.INT);
+            if (is_cmp_op(_op)) vr.basic_v = do_cmp_op(_op, get<int>(v1.basic_v), get<int>(v2.basic_v));
+            else if (is_logic_op(_op)) vr.basic_v = do_logic_op(_op, get<int>(v1.basic_v), get<int>(v2.basic_v));
+            else if (is_alg_op(_op)) vr.basic_v = do_alg_op(_op, get<int>(v1.basic_v), get<int>(v2.basic_v));
             break;
         case Type::Tag::FLOAT:
-            if (is_cmp_op(_op)) vr.INT = do_cmp_op(_op, v1.FLOAT, v2.FLOAT);
-            else if (is_alg_op(_op)) vr.FLOAT = do_alg_op(_op, v1.FLOAT, v2.FLOAT);
+            if (is_cmp_op(_op)) vr.basic_v = do_cmp_op(_op, get<float>(v1.basic_v), get<float>(v2.basic_v));
+            else if (is_alg_op(_op)) vr.basic_v = do_alg_op(_op, get<float>(v1.basic_v), get<float>(v2.basic_v));
             break;
         default: throw logic_error("Unsupported type.");
     }

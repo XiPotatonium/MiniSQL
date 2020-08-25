@@ -23,8 +23,8 @@ class QueryExecutor {
     // TODO shared_ptr
     StorageEngine *_storage_eng;
 
-    bool value_less(Nullable<Type> t, Nullable<Value> v1, Nullable<Value> v2);
-    Nullable<IndexUsage> search_index(BinaryExpression *exp, Relation &relation);
+    bool value_less(optional<Type> t, optional<Value> v1, optional<Value> v2);
+    optional<IndexUsage> search_index(BinaryExpression *exp, Relation &relation);
     // TODO 下面的stmt指针全部可以改成const ref
     unique_ptr<Scanner> select_scanner(SelectStatement *stmt);
     QueryResult select_exe(SelectStatement *stmt);

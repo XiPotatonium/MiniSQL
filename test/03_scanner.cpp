@@ -50,7 +50,7 @@ TEST_CASE(scanner_disk_filter) {
         int count = 0;
         while (sc_filter->next()) {
             if (count == 0) {
-                assert(sc_filter->current().values[0].INT == 1, "case 3 value");
+                assert(get<int>(sc_filter->current().values[0].basic_v) == 1, "case 3 value");
             }
             count++;
         }

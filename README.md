@@ -2,14 +2,16 @@
 
 数据库作业
 
-## TODO
+## In progress
 
 * 有些注释炸了，使用UTF-8重新完善一下注释
 * Mordernize（c++ 17），B+树和Parser不用了
-    * 在ownership的指导下科学使用智能指针，尽可能用引用代替非空裸指针
+    * optional代替了nullable(Done)
+    * variant代替union(Done)
+    * 在ownership的指导下使用智能指针，尽可能用引用代替非空裸指针
     * 能const就const，用override
     * 使用at而不是[]
-    * 用array代替数组,variant代替union
+    * 用array代替数组
 * 操作系统的Page Buffer可不可以用到这里？
 * catelog也许不需要用block的方式存储，这样就没有必要受限于4K大小了，catelog可以在内存中常驻。
 

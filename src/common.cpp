@@ -1,19 +1,22 @@
 #include "../inc/common.hpp"
 
 int Type::length() const {
-    switch (tag)
-    {
-        case Tag::INT:
-        case Tag::FLOAT: return 4;
-        case Tag::CHAR: return CHAR.len;
-        default: throw logic_error("Unexpected type.");
+    switch (tag) {
+    case Tag::INT:
+    case Tag::FLOAT:
+        return 4;
+    case Tag::CHAR:
+        return char_len;
+    default:
+        throw logic_error("Unexpected type.");
     }
 }
 
-
 FieldData Field::to_file() const {
-    if (name.length() >= NAME_LENGTH) throw logic_error("Exceeded maximum name length");
-    if (index_name.length() >= NAME_LENGTH) throw logic_error("Exceeded maximum index name length");
+    if (name.length() >= NAME_LENGTH)
+        throw logic_error("Exceeded maximum name length");
+    if (index_name.length() >= NAME_LENGTH)
+        throw logic_error("Exceeded maximum index name length");
 
     FieldData f;
     strcpy(f.name, name.c_str());
@@ -24,7 +27,7 @@ FieldData Field::to_file() const {
     return f;
 }
 
-void Field::from_file(const FieldData & f) {
+void Field::from_file(const FieldData &f) {
     name = f.name;
     type = f.type;
     unique = f.unique;
@@ -33,13 +36,13 @@ void Field::from_file(const FieldData & f) {
 }
 
 /// <summary>
-/// ¸üÐÂ±íµÄprototype£¬Ö÷ÒªÊÇ¸üÐÂfieldµÄoffsetºÍµ¥ÖµË÷ÒýµÄË÷ÒýÎ»ÖÃ
+/// ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½prototypeï¿½ï¿½ï¿½ï¿½Òªï¿½Ç¸ï¿½ï¿½ï¿½fieldï¿½ï¿½offsetï¿½Íµï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 /// </summary>
 void Relation::update() {
     int len = 0;
     indexes.clear();
     int i = 0;
-    for (auto& f : fields) {
+    for (auto &f : fields) {
         f.offset = len;
         len += f.type.length();
         if (f.has_index) {
@@ -51,14 +54,15 @@ void Relation::update() {
 
 int Relation::record_length() const {
     int len = 0;
-    for (auto& f : fields) {
+    for (auto &f : fields) {
         len += f.type.length();
     }
     return sizeof(RecordEntryData) + len;
 }
 
 RelationData Relation::to_file() const {
-    if (name.length() >= NAME_LENGTH) throw logic_error("Exceeded maximum name length");
+    if (name.length() >= NAME_LENGTH)
+        throw logic_error("Exceeded maximum name length");
 
     RelationData f;
     f.field_count = fields.size();
@@ -70,7 +74,7 @@ RelationData Relation::to_file() const {
     return f;
 }
 
-void Relation::from_file(const RelationData& f) {
+void Relation::from_file(const RelationData &f) {
     fields.clear();
     for (int i = 0; i < f.field_count; i++) {
         Field fld;
@@ -80,12 +84,12 @@ void Relation::from_file(const RelationData& f) {
     update();
 }
 
-void IndexLocation::from_file(const IndexNameLocationData& f) {
+void IndexLocation::from_file(const IndexNameLocationData &f) {
     field = f.field;
     relation_name = f.relation_name;
 }
 
-int DatabaseData::get_block(const char* relation_name) const {
+int DatabaseData::get_block(const char *relation_name) const {
     for (int i = 0; i < MAX_RELATIONS; i++) {
         if (strcmp(relation_name, rel_names[i]) == 0) {
             return i + 1;
@@ -103,7 +107,7 @@ int DatabaseData::get_free_block() const {
     return -1;
 }
 
-int DatabaseData::get_index(const char* index_name) const {
+int DatabaseData::get_index(const char *index_name) const {
     for (int i = 0; i < MAX_INDEXES; i++) {
         if (strcmp(index_name, indexes[i].index_name) == 0) {
             return i;
@@ -121,70 +125,68 @@ int DatabaseData::get_free_index() const {
     return -1; // not found
 }
 
-bool Value::greater_than(const struct Value& x, Type type)
-{
-	using Tag = Type::Tag;
-	switch (type.tag)
-	{
-	case Tag::INT:
-	{
-		if (this->INT >= x.INT)
-			return true;
-		else return false;
-	}
-	case Tag::CHAR:
-	{
-		if (this->CHAR >= x.CHAR)
-			return true;
-		return false;
-	}
-	default:
-	{
-		if (this->FLOAT >= x.FLOAT)
-			return true;
-		return false;
-	}
-	}
-	return true;
-}
-void Value::write(void* addr, Type type) const {
+bool Value::greater_than(const struct Value &x, Type type) {
     using Tag = Type::Tag;
     switch (type.tag) {
-        case Tag::INT: {
-            *((int*)addr) = INT; 
-            break;
-        }
-        case Tag::FLOAT: {
-            *((float*)addr) = FLOAT; 
-            break;
-        }
-        case Tag::CHAR: {
-            int len_limit = type.CHAR.len;
-            if (CHAR.length() >= len_limit)
-                throw logic_error("String too long.");
-            strcpy((char*)addr, CHAR.c_str());
-            break;
-        }
-        default: break;
+    case Tag::INT: {
+        if (get<int>(this->basic_v) >= get<int>(x.basic_v))
+            return true;
+        else
+            return false;
+    }
+    case Tag::CHAR: {
+        if (this->CHAR >= x.CHAR)
+            return true;
+        return false;
+    }
+    default: {
+        if (get<float>(this->basic_v) >= get<float>(x.basic_v))
+            return true;
+        return false;
+    }
+    }
+    return true;
+}
+void Value::write(void *addr, Type type) const {
+    using Tag = Type::Tag;
+    switch (type.tag) {
+    case Tag::INT: {
+        *((int *)addr) = get<int>(basic_v);
+        break;
+    }
+    case Tag::FLOAT: {
+        *((float *)addr) = get<float>(basic_v);
+        break;
+    }
+    case Tag::CHAR: {
+        int len_limit = type.char_len;
+        if (CHAR.length() >= len_limit)
+            throw logic_error("String too long.");
+        strcpy((char *)addr, CHAR.c_str());
+        break;
+    }
+    default:
+        break;
     }
 }
 
-void Value::parse(void* addr, Type type){
+void Value::parse(void *addr, Type type) {
     using Tag = Type::Tag;
     switch (type.tag) {
-        case Tag::INT: {
-            INT = *((int*)addr);
-            break;
-        }
-        case Tag::FLOAT: {
-            FLOAT = *((float*)addr);
-            break;
-        }
-        case Tag::CHAR: {
-            CHAR = string((char*)addr);
-            break;
-        }
-        default: break;
+    case Tag::INT: {
+        basic_v = *((int *)addr);
+        break;
+    }
+    case Tag::FLOAT: {
+        basic_v = *((float *)addr);
+        break;
+    }
+    case Tag::CHAR: {
+        CHAR = string((char *)addr);
+        break;
+    }
+    default:
+        break;
     }
 }
 

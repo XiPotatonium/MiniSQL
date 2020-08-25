@@ -1,7 +1,8 @@
 #pragma once
 #include "common.hpp"
-#include "nullable.hpp"
 #include "block_mgr.hpp"
+#include <optional>
+
 // TODO: B-Tree���
 class IndexIterator {
 public:
@@ -22,5 +23,6 @@ private:
 
 struct IndexUsage {
 	int field_index;
-	Nullable<Value> from, to;
+	optional<Value> from;
+	optional<Value> to;
 };

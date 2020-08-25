@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
-#include "nullable.hpp"
 
 using namespace std;
 

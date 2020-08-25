@@ -3,7 +3,8 @@
 #include "query_lexer.hpp"
 #include "expression.hpp"
 #include "common.hpp"
-#include "nullable.hpp"
+
+#include <optional>
 
 struct Statement {
 private:
@@ -23,18 +24,18 @@ struct SelectSource {
 
 struct InsertStatement : public Statement {
     string into;
-    Nullable<vector<string>> fields;
+    optional<vector<string>> fields;
     vector<pair<Type, Value>> values;
 };
 
 struct SelectField {
     unique_ptr<Expression> expr;
-    // Nullable<string> alias;
+    // optional<string> alias;
 };
 
 struct SelectStatement : public Statement {
-    Nullable<vector<SelectField>> select;
-    Nullable<SelectSource> from;
+    optional<vector<SelectField>> select;
+    optional<SelectSource> from;
     unique_ptr<Expression> where;
 };
 
@@ -61,7 +62,7 @@ struct DeleteStatement : public Statement {
 struct CreateTableField {
 	string name;
 	Type type;
-	Nullable<string> limit;
+	optional<string> limit;
 };
 
 /// <summary>

@@ -2,10 +2,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <optional>
+
 #include "common.hpp"
 #include "block_mgr.hpp"
 #include "files.hpp"
-#include "nullable.hpp"
 
 using namespace std;
 
@@ -18,10 +19,10 @@ public:
 
     void add_relation(const Relation& relation);
     void remove_relation(const string& name);
-    Nullable<Relation> get_relation(const string& name);
+    optional<Relation> get_relation(const string &name);
 
     void add_index(const string& rel_name, const string& field_name, const string& index_name);
     void remove_index(const string& index_name);
-    Nullable<IndexLocation> get_index_location(const string& index_name);
+    optional<IndexLocation> get_index_location(const string& index_name);
 
 };

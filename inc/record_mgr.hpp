@@ -4,7 +4,6 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
-#include "nullable.hpp"
 #include "common.hpp"
 #include "block_mgr.hpp"
 #include "scanner.hpp"
